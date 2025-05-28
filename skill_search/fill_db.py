@@ -1,7 +1,7 @@
 from pymupdf import Document
 from chromadb import HttpClient
 import os
-
+import chromadb.utils.embedding_functions as embedding_functions
 
 def extract_text_from_cv(file_path) -> str:
     pdf_doc = Document(file_path)
@@ -14,7 +14,7 @@ def extract_texts_from_cvs(directory_path: str) -> dict:
         if filename.endswith(".pdf"):
             file_path = os.path.join(directory_path, filename)
             text = extract_text_from_cv(file_path)
-            cv_texts[filename] = text
+            cv_texts[filename] = text.replace("⎽", "").replace("\n", "").strip()
     return cv_texts
 
 def add_cvs_to_chromadb(cv_texts: dict, collection) -> None:
@@ -26,9 +26,13 @@ def add_cvs_to_chromadb(cv_texts: dict, collection) -> None:
 
 if __name__ == "__main__":
     chromadb_client = HttpClient(host="0.0.0.0", port=8000)
-    cv_collection = chromadb_client.create_collection(
-        "cvs", configuration={"space": "cosine"}
-    )
     cv_texts = extract_texts_from_cvs("cvs")
+    openai_ef = embedding_functions.OpenAIEmbeddingFunction(
+        api_key=os.environ["OPENAI_API_KEY"], model_name="text-embedding-3-small"
+    )
+    cv_collection = chromadb_client.create_collection(
+        name="cvs",
+        embedding_function=openai_ef,
+    )
     add_cvs_to_chromadb(cv_texts, cv_collection)
     print("CVs added to ChromaDB successfully.")
