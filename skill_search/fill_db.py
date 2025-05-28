@@ -26,7 +26,9 @@ def add_cvs_to_chromadb(cv_texts: dict, collection) -> None:
 
 if __name__ == "__main__":
     chromadb_client = HttpClient(host="0.0.0.0", port=8000)
-    cv_collection = chromadb_client.create_collection("cvs")
+    cv_collection = chromadb_client.create_collection(
+        "cvs", configuration={"space": "cosine"}
+    )
     cv_texts = extract_texts_from_cvs("cvs")
     add_cvs_to_chromadb(cv_texts, cv_collection)
     print("CVs added to ChromaDB successfully.")
