@@ -26,7 +26,6 @@ def add_cvs_to_chromadb(cv_texts: dict, collection) -> None:
 
 if __name__ == "__main__":
     chromadb_client = HttpClient(host="0.0.0.0", port=8000)
-    cv_texts = extract_texts_from_cvs("cvs")
     openai_ef = embedding_functions.OpenAIEmbeddingFunction(
         api_key=os.environ["OPENAI_API_KEY"], model_name="text-embedding-3-small"
     )
@@ -34,5 +33,4 @@ if __name__ == "__main__":
         name="cvs",
         embedding_function=openai_ef,
     )
-    add_cvs_to_chromadb(cv_texts, cv_collection)
     print("CVs added to ChromaDB successfully.")

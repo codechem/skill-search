@@ -3,6 +3,38 @@ from openai import OpenAI
 import chromadb.utils.embedding_functions as embedding_functions
 import os
 
+
+def get_cv_rankings(cv_collection, job_listing: str, n_results) -> dict:
+    cv_results = cv_collection.query(
+        query_texts=[job_listing],
+        n_results=n_results,
+    )
+    filename_by_document = {
+        filename: document
+        for filename, document in zip(cv_results["ids"][0], cv_results["documents"][0])
+    }
+    initial_prompt = f"""
+    Rank the following CVs based on their relevance to the job requirements.
+    Job requirements are:
+    {job_listing}
+    The CVs are:{filename_by_document}
+    Provide the rankings by using the filename of the CVs.
+    Provide a short explanation for the ranking.
+    Provide the rankings and explanation in the following format:
+    {{
+        filename1:explanation1,
+        filename2:explanation2,
+        filename3:explanation3,
+    }}
+    Don't provide any other information.
+    Don't provide any other text.
+    """
+    openai_client = OpenAI()
+    response = openai_client.responses.create(model="gpt-4.1-mini", input=initial_prompt)
+    dict_response = eval(response.output_text)
+    return dict_response
+
+
 def get_job_requirements(file_path: str) -> dict:
     with open(file_path, "r") as file:
         job_requirements = file.read()
@@ -37,5 +69,5 @@ if __name__ == "__main__":
     Don't provide any other text.
     """
     openai_client = OpenAI()
-    response = openai_client.responses.create(model="gpt-4.1", input=initial_prompt)
+    response = openai_client.responses.create(model="gpt-4.1-mini", input=initial_prompt)
     print(response.output_text)
