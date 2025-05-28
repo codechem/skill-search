@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.12"
 pymupdf = "^1.25.5"
 chromadb = "^1.0.8"
+openai = "^1.78.0"
 
 
 [build-system]
