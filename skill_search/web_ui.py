@@ -45,7 +45,7 @@ def process_uploaded_file(uploaded_file: bytes):
 
 
 def get_cv_collection():
-    chromadb_client = HttpClient(host="db", port=8000)
+    chromadb_client = HttpClient(host=os.environ["DB_HOST"], port=8000)
     openai_ef = embedding_functions.OpenAIEmbeddingFunction(
         api_key=os.environ["OPENAI_API_KEY"], model_name="text-embedding-3-small"
     )

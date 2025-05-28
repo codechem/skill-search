@@ -4,3 +4,4 @@ job_requirements
 __pycache__
 .envrc
 .env
+.DS_Store
