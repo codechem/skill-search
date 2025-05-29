@@ -55,4 +55,4 @@ COPY . .
 EXPOSE 8501
 
 # Run the application.
-CMD ["streamlit","run","skill_search/web_ui.py"]
+CMD ["streamlit","run","web_ui.py"]
