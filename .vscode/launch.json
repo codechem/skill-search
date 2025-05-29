@@ -23,7 +23,7 @@
       "module": "streamlit",
       "args": [
         "run",
-        "skill_search/web_ui.py"
+        "web_ui.py"
       ],
       "console": "integratedTerminal",
       "justMyCode": true
