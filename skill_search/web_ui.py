@@ -88,4 +88,11 @@ with tab2:
             )
     cvs = cv_collection.get()
     df_cvs = pd.DataFrame({"filename": cvs["ids"]})
-    st.dataframe(df_cvs)
+    st.data_editor(df_cvs)
+    rows_to_delete = st.multiselect(
+        "Select cvs to delete by filename", options=df_cvs["filename"]
+    )
+    st.button(
+        "Delete selected cvs",
+        on_click=lambda: cv_collection.delete(ids=rows_to_delete)
+    )
