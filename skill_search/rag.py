@@ -3,6 +3,14 @@ from openai import OpenAI
 import chromadb.utils.embedding_functions as embedding_functions
 import os
 from pymupdf import Document
+from pydantic import BaseModel
+
+class CVRanking(BaseModel):
+    filename: str
+    explanation: str
+    confidence_score: float
+class CVRankResponse(BaseModel):
+    cv_rankings: list[CVRanking]
 
 
 def get_cv_rankings(cv_collection, job_listing: str, n_results) -> dict:
@@ -21,17 +29,20 @@ def get_cv_rankings(cv_collection, job_listing: str, n_results) -> dict:
     The CVs are:{filename_by_document}
     Provide the rankings by using the filename of the CVs.
     Provide a short explanation for the ranking.
-    Provide the rankings and explanation in the following format:
+    Provide the rankings as a list  and explanation in the following format:
     {{
-        filename1:explanation1,
-        filename2:explanation2,
-        filename3:explanation3,
+        filename:cv_filename,
+        explanation:explanation_text,
+        confidence_score:confidence_score_value,
     }}
     Don't provide any other information.
     Don't provide any other text.
+    DONT FORGET COMAS AND MAKE SURE THE FORMAT IS CORRECT.
     """
     openai_client = OpenAI()
-    response = openai_client.responses.create(model="gpt-4.1-mini", input=initial_prompt)
+    response = openai_client.responses.parse(
+        model="gpt-4.1-mini", input=initial_prompt, text_format=CVRankResponse
+    )
     dict_response = eval(response.output_text)
     return dict_response
 

@@ -17,6 +17,12 @@
       "module": "skill_search.main"
     },
     {
+      "name": "Evaluate",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "skill_search.evaluate"
+    },
+    {
       "name": "Streamlit: Run app",
       "type": "python",
       "request": "launch",
