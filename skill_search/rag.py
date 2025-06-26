@@ -37,7 +37,7 @@ def get_cv_rankings(cv_collection, job_listing: str, n_results) -> dict:
     }}
     Don't provide any other information.
     Don't provide any other text.
-    DONT FORGET COMAS AND MAKE SURE THE FORMAT IS CORRECT.
+    DONT FORGET COMMAS AND MAKE SURE THE FORMAT IS CORRECT.
     """
     openai_client = OpenAI()
     response = openai_client.responses.parse(
